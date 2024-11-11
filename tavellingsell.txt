@@ -1,0 +1,101 @@
+#include <bits/stdc++.h>
+using namespace std;
+vector<int> path(20);
+int n;
+
+int g(int k, vector<int>& v, const vector<vector<int>>& c);
+void trvpath(int k, vector<int>& v, const vector<vector<int>>& c, int j);
+
+int main() {
+    int mcost;
+    path[0] = 1;
+    cout << "Enter value of N:\n";
+    cin >> n;
+
+    vector<vector<int>> c(n + 1, vector<int>(n + 1));
+    vector<int> v(n + 1, 0);
+    int j = 1;
+
+    cout << "Enter Adjacency Matrix:\n";
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            cin >> c[i][j];
+        }
+    }
+
+    cout << "Adjacency Matrix:\n";
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            cout << c[i][j] << "\t";
+        }
+        cout << "\n";
+    }
+
+    v[1] = 1;
+    mcost = g(1, v, c);
+
+    fill(v.begin(), v.end(), 0);
+    v[1] = 1;
+    trvpath(1, v, c, j);
+
+    cout << "Minimum cost is : " << mcost << endl;
+    cout << "Path : ";
+    for (int i = 0; i <= n; i++) {
+        cout << path[i] << (i == n ? "" : "-");
+    }
+    cout << endl;
+
+    return 0;
+}
+
+int g(int k, vector<int>& v, const vector<vector<int>>& c) {
+    int min = numeric_limits<int>::max();
+    bool flag = false;
+
+    for (int i = 2; i <= n; i++) {
+        if (v[i] == 0) {
+            flag = true;
+            break;
+        }
+    }
+    
+    if (!flag) {
+        return c[k][1];
+    }
+
+    for (int i = 2; i <= n; i++) {
+        if (v[i] == 0) {
+            v[i] = 1;
+            int temp = c[k][i] + g(i, v, c);
+            if (temp < min) {
+                min = temp;
+            }
+            v[i] = 0;
+        }
+    }
+    return min;
+}
+
+void trvpath(int k, vector<int>& v, const vector<vector<int>>& c, int j) {
+    if (j < n) {
+        int min = numeric_limits<int>::max();
+        int t = 0;
+        vector<int> v1(v);
+
+        for (int i = 2; i <= n; i++) {
+            if (v[i] == 0) {
+                v[i] = 1;
+                int temp = c[k][i] + g(i, v, c);
+                if (temp < min) {
+                    min = temp;
+                    t = i;
+                    v1 = v; // Store current state of v
+                }
+                v[i] = 0;
+            }
+        }
+
+        path[j] = t;
+        trvpath(t, v1, c,j+1);
+    }
+}
