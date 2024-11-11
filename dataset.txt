@@ -1,0 +1,27 @@
+1  import pandas as pd
+
+2   df=pd.read_csv("heart.csv")
+
+3  df.shape
+
+4  df.dtypes
+
+5  df.head(5)
+
+6   df.isnull().sum()
+
+7   count=(df['Fbs']==0).sum()
+    print(count)
+
+8  print((df==0).sum())
+
+8   df.describe()
+
+9  df['Age'].mean()
+
+10  df['Chol'].min()
+
+11   df.rename(columns={'MaxHR':'Max_HR'})
+
+12  df["Ca"].fillna(df['Ca'].mean(),inplace=True)
+    df.isnull().sum()
